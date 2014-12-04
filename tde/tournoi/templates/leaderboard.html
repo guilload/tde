@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+<h2>Classement après {{ fixture.week }} journées</h2>
+
+<div>
+<table class="table table-striped">
+    <thead>
+    <th>Position</th>
+    <th>Prénom</th>
+    <th>Points</th>
+    </thead>
+    <tbody>
+        {% for user in leaderboard %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.user__username }}</td>
+            <td>{{ user.score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

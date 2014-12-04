@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+<h2>{{ fixture }}</h2>
+<form method="POST">
+  {% csrf_token %}
+  <table class="table table-striped">
+    <thead>
+      <th>Domicile</th>
+      <th></th>
+      <th>1</th>
+      <th>N</th>
+      <th>2</th>
+      <th></th>
+      <th>Extérieur</th>
+    </thead>
+    <tbody>
+      {% for bet in bets %}
+      {% with bet.game as game %}
+      <tr>
+        <td>{{ game.home }}</td>
+        <td>{{ game.hscore }}</td>
+        <td><input type="radio" name="bet_{{ bet.id }}" value="1" {% if bet.result == '1' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
+        <td><input type="radio" name="bet_{{ bet.id }}" value="N" {% if bet.result == 'N' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
+        <td><input type="radio" name="bet_{{ bet.id }}" value="2" {% if bet.result == '2' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
+        <td>{{ game.vscore }}</td>
+        <td>{{ game.visitors }}</td>
+      </tr>
+      {% endwith %}
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="text-center">
+    <button type="submit" class="btn btn-default">Parier!</button>
+  </div>
+
+</form>
+<div class="row">
+  <div class="col-md-4">
+    <a href="{% url 'fixture' fixture.season fixture.prev %}">
+      <span aria-hidden="true">&laquo; Journée précédente</span><span class="sr-only"></span>
+    </a>
+  </div>
+  <div class="col-md-4 col-md-offset-4 text-right">
+    <a href="{% url 'fixture' fixture.season fixture.next %}">
+      <span aria-hidden="true">Journée suivante &raquo;</span><span class="sr-only"></span>
+    </a>
+  </div>
+</div>
+
+{% endblock %}
