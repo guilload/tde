@@ -14,25 +14,37 @@
       <th>2</th>
       <th></th>
       <th>Extérieur</th>
+      <th></th>
     </thead>
     <tbody>
+      {% load static %}
+      {% get_static_prefix as STATIC %}
+
       {% for bet in bets %}
       {% with bet.game as game %}
       <tr>
+        <td><img class="club-logo club-logo-right" src="{{ STATIC }}clubs/{{ game.home.shortname }}.png"></td>
         <td>{{ game.home }}</td>
-        <td>{{ game.hscore }}</td>
-        <td><input type="radio" name="bet_{{ bet.id }}" value="1" {% if bet.result == '1' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
-        <td><input type="radio" name="bet_{{ bet.id }}" value="N" {% if bet.result == 'N' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
-        <td><input type="radio" name="bet_{{ bet.id }}" value="2" {% if bet.result == '2' %}checked{% endif %} {% if game.started %}disabled{% endif %}></td>
-        <td>{{ game.vscore }}</td>
+        <td>{%if game.updated %}{{ game.hscore }}{% endif %}</td>
+        <td>
+          <input type="radio" name="bet_{{ bet.id }}" value="1" {% if bet.result == 1 %}checked{% endif %} {% if game.started %}disabled{% endif %}>
+        </td>
+        <td>
+          <input type="radio" name="bet_{{ bet.id }}" value="0" {% if bet.result == 0 %}checked{% endif %} {% if game.started %}disabled{% endif %}>
+        </td>
+        <td>
+          <input type="radio" name="bet_{{ bet.id }}" value="2" {% if bet.result == 2 %}checked{% endif %} {% if game.started %}disabled{% endif %}>
+        </td>
+        <td>{%if game.updated %}{{ game.vscore }}{% endif %}</td>
         <td>{{ game.visitors }}</td>
+        <td><img class="club-logo club-logo-right" src="{{ STATIC }}clubs/{{ game.visitors.shortname }}.png"></td>
       </tr>
       {% endwith %}
       {% endfor %}
     </tbody>
   </table>
   <div class="text-center">
-    <button type="submit" class="btn btn-default">Parier!</button>
+    <button type="submit" class="btn btn-default">Parier !</button>
   </div>
 
 </form>
