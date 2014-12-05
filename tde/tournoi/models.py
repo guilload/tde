@@ -20,15 +20,13 @@ class Club(models.Model):
 
 
 class Game(models.Model):
-    CHOICES = [('0', '0'), ('1', '1'), ('N', 'N'), ('2', '2')]
-
     fixture = models.ForeignKey('Fixture')
     home = models.ForeignKey('Club', related_name='home_fk')
     visitors = models.ForeignKey('Club', related_name='visitors_fk')
     date = models.DateTimeField()
     hscore = models.DecimalField(max_digits=2, decimal_places=0, default=-1)
     vscore = models.DecimalField(max_digits=2, decimal_places=0, default=-1)
-    result = models.CharField(max_length=1, default='0', choices=CHOICES)
+    result = models.DecimalField(max_digits=1, decimal_places=0, default=-1)
 
     class Meta:
         unique_together = ('fixture', 'home', 'visitors')
@@ -39,8 +37,23 @@ class Game(models.Model):
                                     self.visitors.name)
 
     @property
+    def updated(self):
+        return self.hscore != -1 and self.vscore != -1
+
+    @property
     def started(self):
         return timezone.now() > self.date
+
+    def save(self, *args, **kwargs):
+        if self.updated:
+            if self.hscore < self.vscore:
+                self.result = 2
+            elif self.hscore > self.vscore:
+                self.result = 1
+            else:
+                self.result = 0
+
+        super(Game, self).save(*args, **kwargs)
 
 
 class Fixture(models.Model):
@@ -78,7 +91,7 @@ class Bet(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     fixture = models.ForeignKey('Fixture')
     game = models.ForeignKey('Game')
-    result = models.CharField(max_length=1)
+    result = models.DecimalField(max_digits=1, decimal_places=0, default=-1)
     placed_at = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     class Meta:
@@ -97,7 +110,7 @@ class Bet(models.Model):
             games = Game.objects.filter(fixture=fixture)
 
             for game in games:
-                bet = Bet(fixture=fixture, user=user, game=game, result='0')
+                bet = Bet(fixture=fixture, user=user, game=game)
                 bet.save()
                 bets.append(bet)
 
