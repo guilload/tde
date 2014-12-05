@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
@@ -43,15 +44,14 @@ def logout_v(request):
 
 @login_required
 def fixture_v(request, season, week):
-    try:
-        fixture = Fixture.objects.get(season=season, week=week)
-    except Fixture.DoesNotExist:
-        raise Http404
+    fixture = Fixture.objects.get(season=season, week=week)
+    username = request.GET.get('bettor', request.user.username)
+    bettor = User.objects.get(username=username)
 
     if request.method == 'GET':
-        bets = Bet.populate(fixture=fixture, user=request.user)
-        # users = User.objects.all()
-        context = {'bets': bets, 'fixture': fixture}
+        bets = Bet.populate(fixture=fixture, user=bettor)
+        users = User.objects.all()
+        context = {'bets': bets, 'bettor': bettor, 'fixture': fixture, 'users': users}
         return render(request, 'fixture.html', context)
 
     elif request.method == 'POST':

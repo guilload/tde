@@ -120,7 +120,7 @@ class Bet(models.Model):
     def update(cls, data):
         for key, result in data.items():
             if key.startswith('bet_'):
-                bet = cls.objects.get(pk=int(key[4:]))
+                bet = cls.objects.get(pk=key[4:])
 
                 if not bet.game.started:
                     bet.result = result

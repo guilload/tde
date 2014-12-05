@@ -3,10 +3,16 @@
 {% block container %}
 
 <h2>{{ fixture }}</h2>
+<select id="select-bettor">
+  {% for user in users %}
+  <option value="{{ user.username }}" {% if bettor == user %}selected{% endif %}>{{ user.username|capfirst }}</option>
+  {% endfor %}
+</select>
 <form method="POST">
   {% csrf_token %}
   <table class="table table-striped">
     <thead>
+      <th></th>
       <th>Domicile</th>
       <th></th>
       <th>1</th>
@@ -43,19 +49,21 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if bettor == user %}
   <div class="text-center">
     <button type="submit" class="btn btn-default">Parier !</button>
   </div>
+  {% endif %}
 
 </form>
 <div class="row">
   <div class="col-md-4">
-    <a href="{% url 'fixture' fixture.season fixture.prev %}">
+    <a href="{% url 'fixture' fixture.season fixture.prev %}?bettor={{ bettor.username }}">
       <span aria-hidden="true">&laquo; Journée précédente</span><span class="sr-only"></span>
     </a>
   </div>
   <div class="col-md-4 col-md-offset-4 text-right">
-    <a href="{% url 'fixture' fixture.season fixture.next %}">
+    <a href="{% url 'fixture' fixture.season fixture.next %}?bettor={{ bettor.username }}">
       <span aria-hidden="true">Journée suivante &raquo;</span><span class="sr-only"></span>
     </a>
   </div>
@@ -65,4 +73,8 @@
 
 {% block javascript %}
 $("#navbar ul li:nth-child(2)").addClass("active");
+
+$("#select-bettor").change(function() {
+    window.location = "{% url 'fixture' fixture.season fixture.week %}?bettor=" + $("#select-bettor").val();
+});
 {% endblock %}
