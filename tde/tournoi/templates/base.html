@@ -33,11 +33,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Tournoi</a>
+          <a class="navbar-brand" href="">Tournoi</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="{% url 'leaderboard' %}">Classement</a></li>
+            <li><a href="{% url 'leaderboard' %}">Classement</a></li>
             <li><a href="{% url 'fixture' fixture.season fixture.week %}">Journées</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -45,10 +45,15 @@
     </nav>
 
     <div class="container">
-      {% block container %}{% endblock %}
+    {% block container %}{% endblock %}
     </div><!-- /.container -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    {% block javascript %}{% endblock %}
+    })
+    </script>
   </body>
 </html>
