@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -50,8 +51,8 @@ def fixture_v(request, season, week):
 
     if request.method == 'GET':
         bets = Bet.populate(fixture=fixture, user=request.user)
-        # users = User.objects.all()
-        context = {'bets': bets, 'fixture': fixture}
+        users = User.objects.all()
+        context = {'bets': bets, 'fixture': fixture, 'users': users}
         return render(request, 'fixture.html', context)
 
     elif request.method == 'POST':

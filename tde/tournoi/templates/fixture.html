@@ -3,10 +3,16 @@
 {% block container %}
 
 <h2>{{ fixture }}</h2>
+<select>
+  {% for usr in users %}
+  <option value="{{ usr.username }}" {% if user == usr %}selected{% endif %}>{{ usr.username|capfirst }}</option>
+  {% endfor %}
+</select>
 <form method="POST">
   {% csrf_token %}
   <table class="table table-striped">
     <thead>
+      <th></th>
       <th>Domicile</th>
       <th></th>
       <th>1</th>
