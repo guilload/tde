@@ -84,7 +84,7 @@ class Fixture(models.Model):
         return self.week + 1
 
     def leaderboard(self):
-        return cls.objects.filter(fixture=self, game__result=F('result')).values('user__username').annotate(score=Count('user')).order_by('score')
+        return Bet.objects.filter(result__gt=-1, fixture=self, game__result=F('result')).values('user__username').annotate(score=Count('user')).order_by('score')
 
 
 class Bet(models.Model):
@@ -99,7 +99,7 @@ class Bet(models.Model):
 
     @classmethod
     def leaderboard(cls):
-        return cls.objects.filter(game__result=F('result')).values('user__username').annotate(score=Count('user')).order_by('score')
+        return cls.objects.filter(result__gt=-1, game__result=F('result')).values('user__username').annotate(score=Count('user')).order_by('score')
 
     @classmethod
     def populate(cls, fixture, user):
