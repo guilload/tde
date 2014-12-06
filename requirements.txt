@@ -1,2 +1,7 @@
 Django==1.7.1
+dj-database-url==0.3.0
+django-toolbelt==0.0.1
+gunicorn==19.1.1
+psycopg2==2.5.4
 pytz==2014.10
+whitenoise==1.0.5

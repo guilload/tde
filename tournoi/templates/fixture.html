@@ -23,13 +23,11 @@
       <th></th>
     </thead>
     <tbody>
-      {% load static %}
-      {% get_static_prefix as STATIC %}
-
+      {% load static from staticfiles %}
       {% for bet in bets %}
       {% with bet.game as game %}
       <tr>
-        <td><img class="club-logo club-logo-right" src="{{ STATIC }}clubs/{{ game.home.shortname }}.png"></td>
+        <td><img class="club-logo club-logo-right" src="{% static 'clubs/'|add:game.home.shortname|lower|add:'.png' %}"></td>
         <td>{{ game.home }}</td>
         <td>{%if game.updated %}{{ game.hscore }}{% endif %}</td>
         <td>
@@ -43,7 +41,7 @@
         </td>
         <td>{%if game.updated %}{{ game.vscore }}{% endif %}</td>
         <td>{{ game.visitors }}</td>
-        <td><img class="club-logo club-logo-right" src="{{ STATIC }}clubs/{{ game.visitors.shortname }}.png"></td>
+        <td><img class="club-logo club-logo-right" src="{% static 'clubs/'|add:game.visitors.shortname|lower|add:'.png' %}"></td>
       </tr>
       {% endwith %}
       {% endfor %}
